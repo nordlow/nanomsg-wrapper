@@ -20,7 +20,7 @@ addons:
       - libnanomsg-dev
 
 script:
-  dub test --compiler=${DC} -- -d -s
+  dub test --compiler=${DC} -- -d -s ~@notravis
 
 after_success:
  - bash <(curl -s https://codecov.io/bash)

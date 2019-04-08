@@ -176,6 +176,7 @@ else {
 }
 
 
+@Tags("notravis")
 @("init.send throws if not initialised")
 @safe unittest {
     enum uri = "ipc://nanomsg_init_send_throws";
