@@ -1,5 +1,4 @@
 language: d
-sudo: required
 dist: xenial
 
 
