@@ -335,6 +335,14 @@ struct NanoSocket {
         return text(_protocol, connText, _uri);
     }
 
+    /// get the underlying nanomsg socket file descriptor.
+    /// Bear in mind that NanoSocket contains state about
+    /// the socket options, so changing these from the
+    /// raw fd will result in unpredictable behaviour
+    int nanoSock() @safe pure const @nogc nothrow {
+        return _nanoSock;
+    }
+
 private:
 
     enum Connection {

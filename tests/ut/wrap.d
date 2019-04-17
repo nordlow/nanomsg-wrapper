@@ -233,7 +233,32 @@ else {
     str.shouldEqual("Don't need the GC to receive");
 }
 
+@("access underlying socket")
+unittest {
+
+    import std.range: iota;
+    import std.array : array;
+    import nanomsg.bindings : nn_send, nn_recv, nn_freemsg, NN_MSG;
+
+    NanoSocket pull, push;
+
+    enum uri = "inproc://nanomsg_raw_sock";
+    pull.initialize(NanoSocket.Protocol.pull, BindTo(uri));
+    push.initialize(NanoSocket.Protocol.push, ConnectTo(uri));
+
+    pull.setOption(NanoSocket.Option.receiveTimeoutMs, 10);
+    push.setOption(NanoSocket.Option.sendTimeoutMs, 10);
+
+    auto sourceData = iota(ubyte(0), ubyte(255)).array;
+    push.nanoSock.nn_send(sourceData.ptr, sourceData.length, 0);
+    void* res;
+    auto len = pull.nanoSock.nn_recv(&res, NN_MSG, 0);
+    assert(len == 255);
+    scope (exit) nn_freemsg(res);
+    (cast(ubyte*)res)[0 .. 255].shouldEqual(sourceData);
+}
 
 ubyte[] toBytes(T)(T bytes) @trusted {
     return cast(ubyte[]) bytes.dup;
 }
+
