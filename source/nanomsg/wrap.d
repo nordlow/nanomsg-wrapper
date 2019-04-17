@@ -339,7 +339,7 @@ struct NanoSocket {
     /// Bear in mind that NanoSocket contains state about
     /// the socket options, so changing these from the
     /// raw fd will result in unpredictable behaviour
-    int nanoSock() @safe pure const @nogc nothrow {
+    int nanoSock() @system pure const @nogc nothrow {
         return _nanoSock;
     }
 
