@@ -394,24 +394,6 @@ private:
             : NanoBuffer();
     }
 
-    void enforceNanoMsgRet(E)(lazy E expr, string file = __FILE__, size_t line = __LINE__) @trusted const {
-        import std.conv: text;
-        const value = expr();
-        if(value < 0) {
-            version(NanomsgWrapperNoGcException) {
-                import nogc: NoGcException;
-                NoGcException.throwNewWithFileAndLine(
-                    file, line, "nanomsg expression failed with value ", numBytes,
-                    " errno ", nn_errno, ", error: ", nn_strerror(nn_errno));
-            } else {
-                throw new Exception(text("nanomsg expression failed with value ", value,
-                                         " errno ", nn_errno, ", error: ", nn_strerror(nn_errno)),
-                                    file,
-                                    line);
-            }
-        }
-    }
-
     // the int level and option values needed by the nanomsg C API
     static struct OptionC {
         int level;
@@ -515,6 +497,25 @@ private:
     static int flags(Flag!"blocking" blocking) @safe @nogc pure nothrow {
         return blocking ? 0 : NN_DONTWAIT;
     }
+}
+
+int enforceNanoMsgRet(E)(lazy E expr, string file = __FILE__, size_t line = __LINE__) @trusted {
+    import std.conv: text;
+    const value = expr();
+    if(value < 0) {
+        version(NanomsgWrapperNoGcException) {
+            import nogc: NoGcException;
+            NoGcException.throwNewWithFileAndLine(
+                file, line, "nanomsg expression failed with value ", numBytes,
+                " errno ", nn_errno, ", error: ", nn_strerror(nn_errno));
+        } else {
+            throw new Exception(text("nanomsg expression failed with value ", value,
+                                     " errno ", nn_errno, ", error: ", nn_strerror(nn_errno)),
+                                file,
+                                line);
+        }
+    }
+    return value;
 }
 
 /// check nanomsg socket
