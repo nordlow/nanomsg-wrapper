@@ -232,7 +232,7 @@ struct NanoSocket {
 
     /**
        Sends the bytes as expected. If the protocol is Request, then returns
-       the response, otherwise returns an empty array.
+       the response, otherwise returns a view of the input data.
      */
     NanoBuffer send(T)(T[] data,
                        Flag!"blocking" blocking = Yes.blocking,
