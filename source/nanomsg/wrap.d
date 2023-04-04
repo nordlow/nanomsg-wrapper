@@ -210,7 +210,7 @@ struct NanoSocket {
     NanoBuffer receive(Flag!"blocking" blocking = Yes.blocking,
                        in string file = __FILE__,
                        in size_t line = __LINE__)
-        @safe scope return const
+        @safe return scope const
     {
         static void[] buffer;
         return receiveImpl(buffer, blocking, file, line);
