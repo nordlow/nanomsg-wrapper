@@ -23,7 +23,7 @@ nothrow:
 
 // Note that comments beginning /** followed by a new line are highlighted in sublime, so please keep this formatting */
 
-extern(C) @system nothrow @nogc align(1):
+extern(C) nothrow @nogc align(1):
 
 ///
 enum PROTO_SP = 1;
