@@ -10,12 +10,6 @@ import core.thread;
 import nanomsg;
 
 ///
-string date ()
-{
-  return Clock.currTime.toSimpleString();
-}
-
-///
 enum NODE0="node0";
 ///
 enum NODE1="node1";
@@ -23,7 +17,7 @@ enum NODE1="node1";
 enum DATE="DATE";
 
 ///
-int node0(string surl)
+int run_node0(string surl)
 {
   char* url=cast(char*)surl;
   int sz_date = cast(int)DATE.length+1;
@@ -38,7 +32,7 @@ int node0(string surl)
       if (to!string(buf)==DATE)
       {
           writefln("NODE0: RECEIVED DATE REQUEST");
-          auto d=date();
+          auto d=Clock.currTime.toSimpleString;
           int sz_d = cast(int)d.length + 1; // '\0' too
           writefln("NODE0: SENDING DATE %s", d);
           bytes = nn_send (sock, cast(char*)d, sz_d, 0);
@@ -51,7 +45,7 @@ int node0(string surl)
 
 
 ///
-int node1 (string url)
+int run_node1 (string url)
 {
   int sz_date = cast(int)DATE.length+1;
   char *buf = cast(char*)0;
@@ -69,16 +63,16 @@ int node1 (string url)
   return nn_shutdown (sock, 0);
 }
 
- 
+
 ///
 int main(string[] argv)
 {
   if (argv.length>1)
     if (argv[1]==NODE0)
-      return node0(argv[2]);
+      return run_node0(argv[2]);
   if (argv.length>1)
       if (argv[1]==NODE1)
-        return node1(argv[2]);
+        return run_node1(argv[2]);
    writefln("Usage: reqrep %s|%s <URL> <ARG> ...'",NODE0, NODE1);
    return 1;
 }

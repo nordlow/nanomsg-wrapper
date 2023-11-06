@@ -21,7 +21,7 @@ string date ()
 }
 
 ///
-int server (string surl)
+int run_server (string surl)
 {
   auto url=surl.toStringz;
   int sock = nn_socket (AF_SP, NN_PUB);
@@ -40,7 +40,7 @@ int server (string surl)
 }
 
 ///
-int client (string surl, string sname)
+int run_client (string surl, string sname)
 {
   auto url=surl.toStringz;
   auto name=sname.toStringz;
@@ -65,10 +65,10 @@ int main (string[] argv)
 {
   if (argv.length>=2)
     if (SERVER==argv[1])
-      return server (argv[2]);
+      return run_server (argv[2]);
   if (argv.length>=3)
     if (CLIENT==argv[1])
-      return client (argv[2], argv[3]);
+      return run_client (argv[2], argv[3]);
   writefln("Usage: pubsub %s|%s <URL> <ARG> ...",SERVER, CLIENT);
   return 1;
 }

@@ -47,7 +47,7 @@ void send_recv(int sock, string name)
 }
 
 ///
-int node0(string url)
+int run_node0(string url)
 {
   int sock = nn_socket (AF_SP, NN_PAIR);
   assert (sock >= 0);
@@ -57,7 +57,7 @@ int node0(string url)
 }
 
 ///
-int node1(string url)
+int run_node1(string url)
 {
   int sock = nn_socket (AF_SP, NN_PAIR);
   assert (sock >= 0);
@@ -70,10 +70,10 @@ int main(string[] argv)
 {
   if (argv.length>1)
     if (NODE0==argv[1])
-      return node0(argv[2]);
+      return run_node0(argv[2]);
   if (argv.length>1)
     if (NODE1==argv[1])
-      return node1(argv[2]);
+      return run_node1(argv[2]);
   writefln("Usage: pair %s|%s <URL> <ARG> ...",NODE0, NODE1);
   return 1;
 }

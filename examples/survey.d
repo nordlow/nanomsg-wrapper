@@ -18,13 +18,7 @@ enum CLIENT ="client";
 enum DATE  = "DATE";
 
 ///
-string date ()
-{
-  return Clock.currTime.toSimpleString();
-}
-
-///
-int server (string surl)
+int run_server (string surl)
 {
   auto url=surl.toStringz;
   int sock = nn_socket (AF_SP, NN_SURVEYOR);
@@ -50,7 +44,7 @@ int server (string surl)
 }
 
 ///
-int client(string surl,string sname)
+int run_client(string surl,string sname)
 {
   auto url=surl.toStringz;
   auto name=sname.toStringz;
@@ -65,7 +59,7 @@ int client(string surl,string sname)
         {
           writefln("CLIENT (%s): RECEIVED \"%s\" SURVEY REQUEST", to!string(name), to!string(buf));
           nn_freemsg (buf);
-          string d = date();
+		  string d = Clock.currTime.toSimpleString;
           int sz_d = cast(int)d.length+1;
           writefln("CLIENT (%s): SENDING DATE SURVEY RESPONSE", to!string(name));
           int nubytes = nn_send (sock, d.toStringz, sz_d, 0);
@@ -80,10 +74,10 @@ int main (string[] argv)
 {
   if (argv.length>=2)
     if (argv[1]==SERVER)
-      return server (argv[2]);
+      return run_server (argv[2]);
   if (argv.length>=3)
     if (argv[1]==CLIENT)
-      return client(argv[2], argv[3]);
+      return run_client(argv[2], argv[3]);
   writefln("Usage: survey %s|%s <URL> <ARG> ...",SERVER, CLIENT);
   return 1;
 }
