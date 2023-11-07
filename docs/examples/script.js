@@ -1,4 +1,46 @@
-window.onload = function() {
+window.addEventListener("load", function() {
+
+	var lineWrappers = document.querySelectorAll(".with-line-wrappers");
+	for(var i = 0; i < lineWrappers.length; i++) {
+		var l = lineWrappers[i];
+
+		var codeblock = document.createElement("div");
+		codeblock.className = "codeblock";
+		l.parentNode.insertBefore(codeblock, l);
+
+		var header = document.createElement("header");
+		codeblock.appendChild(header);
+		codeblock.appendChild(l);
+
+		var btn = document.createElement("button");
+		btn.setAttribute("type", "button");
+		var canCopyToClipboard = document.queryCommandSupported("copy");
+		btn.addEventListener("click", (function(l) { return function() {
+			document.body.classList.add("hide-line-numbers");
+			window.getSelection().selectAllChildren(l);
+			if(canCopyToClipboard)
+				if(!document.execCommand("copy")) {
+					alert("copy failed, try ctrl+c manually");
+				}
+		};})(l));
+		btn.textContent = canCopyToClipboard ? "Copy to Clipboard" : "Select All";
+		header.appendChild(btn);
+
+		var btn = document.createElement("button");
+		btn.setAttribute("type", "button");
+		btn.addEventListener("click", function() {
+			document.body.classList.toggle("hide-line-numbers");
+		});
+		btn.textContent = "Toggle Line Numbers";
+		header.appendChild(btn);
+	}
+
+	/* // still sucks in firefox!
+	document.addEventListener("copy", function(event) {
+		document.body.classList.add("hide-line-numbers");
+	});
+	*/
+
 	document.body.addEventListener("mouseover", function(event) {
 		if(event.target.hasAttribute("data-ident")) {
 			var all = document.querySelectorAll("[data-ident=\""+event.target.getAttribute("data-ident")+"\"]");
@@ -81,6 +123,7 @@ window.onload = function() {
 		sn.insertBefore(search, sn.firstChild);
 	}
 
+	/*
 	function updateDynamicStyle() {
 		var thing = document.getElementById("page-content");
 		var newStyle = document.getElementById("dynamic-style");
@@ -92,7 +135,7 @@ window.onload = function() {
 		}
 
 		var maxContentWidth = window.innerWidth;
-		/* 800 is the threshold for putting nav vertically */
+		// 800 is the threshold for putting nav vertically
 		if(maxContentWidth < 800)
 			maxContentWidth = 800;
 		else
@@ -102,12 +145,17 @@ window.onload = function() {
 				document.getElementById("page-nav").offsetLeft -
 				64;
 
+		// sanity check lol
+		if(maxContentWidth < 800)
+			maxContentWidth = 800;
+
 		newStyle.innerHTML = ".member-list:not(.constructors) dt .simplified-prototype:hover { width: " + (thing.offsetWidth - 32) + "px; } #page-content pre.d_code, #page-content .overload-option, #page-content .member-list dt { max-width: " + (maxContentWidth) + "px; }";
 	}
 
 	updateDynamicStyle();
 
 	window.onresize = updateDynamicStyle;
+	*/
 
 	// Disable line numbers in IE because the copy/paste with them sucks - it includes all line numbers
 	// in the middle making it too hard to use. Copy/paste is more important than line displays.
@@ -117,4 +165,16 @@ window.onload = function() {
 			items[a].className = items[a].className.replace("with-line-wrappers", "");
 	}
 
-};
+  // Keybind to focus search bar on '?' keydown.
+  document.addEventListener("keydown", (event) => {
+    if (event.key == "?") {
+      var searchBox = document.getElementsByName("searchTerm")[0];
+      // Hack so the '?' doesn't auto-populate in the search bar.
+      this.setTimeout(() => {
+        searchBox.focus();
+      }, 100);
+    }
+  });
+
+
+});
